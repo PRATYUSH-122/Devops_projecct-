@@ -1,0 +1,45 @@
+# create java-pipeline stages:-
+pipeline {
+agent any
+stages {
+    
+    stage('Checkout') {
+       steps {
+         echo "CheckOut"  
+         git credentialsId: '3ac2e071-345a-419d-9ddc-bff0c8b88320', url: 'https://github.com/PRATYUSH-122/helloworld.git', branch: 'main'
+       }
+    }
+    stage('Build') {
+        steps {
+           echo "Build"      
+           bat 'mvn -B -DskipTests clean package'
+        }
+    }
+     stage('Test') {
+        steps {
+           echo "Test"    
+           bat 'mvn test'
+        }
+    }
+     stage('Sonar') {
+        steps {
+           echo "Sonar"     
+           bat 'mvn sonar:sonar \
+                 -Dsonar.projectKey=helloword \
+                 -Dsonar.host.url=http://localhost:9000 \
+                 -Dsonar.login=a2403b6cc1d5933c4dedfa5094ea07a68a1679a4\
+		         -Dsonar.java.coveragePlugin=jacoco \
+                 -Dsonar.jacoco.reportPaths=target\\jacoco.exec'
+                
+	    }
+    }
+    stage('Deploy to Local') {
+        steps {
+           echo "Deploy To Local"
+          // bat '%CATALINA_HOME%\\scripts\\startup.bat start'
+         //  bat 'mvn tomcat7:redeploy -D tomcaturl="http://localhost:8080/manager/" -D tomcatid=tomcat9'
+          bat  'C:\\software\\apache-tomcat-9.0.36\\bin\\startup.bat start'
+        }
+    }
+}
+}
