@@ -1,0 +1,67 @@
+# create python pipeline:-
+pipeline {
+	agent any
+	stages{
+		stage('Checkout Code'){
+		steps{
+			echo '*** Cleaning Workspace Stage started ***'
+			git credentialsId: '3ac2e071-345a-419d-9ddc-bff0c8b88320', url:'https://github.com/PRATYUSH-122/JenkinsPipelinepython.git', branch: 'master'
+			echo '*** Cleaning Workspace Stage Finished ***'
+		}
+	   }
+	stage('Clean reports')
+	{
+	steps{
+		echo '*** Cleaning Workspace Stage started ***'
+		bat 'rmdir /s /q test-reports'
+		echo '*** Cleaning Workspace Stage started ***'
+		 }
+	}
+	
+	stage('Build Stage'){
+		steps {
+			echo '*** Build Stage started ***'
+			bat 'pip install -r requirements.txt'
+			bat 'pip install pyinstaller'
+			bat 'pyinstaller --onefile app.py'
+			echo '*** Build Stage Finished ***'
+		 }
+	    }
+	stage('Testing Stage'){
+		steps {
+			echo '*** Test Stage started ***'
+			bat 'python test.py'
+			echo '*** Test Stage Finished ***'
+		 }
+		}
+		stage('Configure Artifactory'){
+      steps{
+        script {
+           echo '*** Configure Artifactory Started ****'
+            //def userInput = input(
+            //id: 'userInput', message: 'Enter password for Artifactory', parameters: [
+            //[$class: 'TextParameterDefinition', defaultValue: 'password', description: 'Artifactory Password', name: 'password']])
+            //bat 'jfrog config remove'
+            //bat 'jfrog config add artifactory-demo --url=http://ec2-18-213-3-148.compute-1.amazonaws.com:8082/ --user=admin --password=Sagar123@'
+            echo '*** Configure Artifactory Finished ****'
+        }
+       }
+		}
+stage('Sanity check') {
+         steps {
+            echo '*** Sanity check ****' 
+            //input "Does the staging environment look ok?"
+         }
+    }
+    stage('Deployment Stage'){
+        steps{
+            //input "Do you want to Deploy the application?"
+            echo '*** Deploy Stage Started ****'
+            timeout (time : 1, unit : 'MINUTES') {
+               bat 'python app.py'
+            }
+            echo '*** Deploy Stage Finished ****'
+        }
+    }
+    }
+}
