@@ -42,8 +42,8 @@ stages {
     stage('Deploy to Local') {
         steps {
            echo "Deploy To Local"
-            bat '%CATALINA_HOME%\\scripts\\startup.bat start'
-            bat 'mvn tomcat7:redeploy -D tomcaturl="http://localhost:8080/manager/" -D tomcatid=tomcat9'
+            //bat '%CATALINA_HOME%\\scripts\\startup.bat start'
+            //bat 'mvn tomcat7:redeploy -D tomcaturl="http://localhost:8080/manager/" -D tomcatid=tomcat9'
           bat  'C:\\software\\apache-tomcat-9.0.36\\bin\\startup.bat start'
         }
     }
