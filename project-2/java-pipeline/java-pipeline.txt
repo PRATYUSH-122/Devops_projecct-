@@ -33,10 +33,10 @@ stages {
                 
 	    }
     }
-     stage('Uploading artifacts to Jfrog') {
-        steps {
-           echo "Uploading artifacts to Jfrog"
-           bat 'mvn deploy'
+     //stage('Uploading artifacts to Jfrog') {
+       // steps {
+         //  echo "Uploading artifacts to Jfrog"
+          // bat 'mvn deploy'
         }
     }
     stage('Deploy to Local') {
